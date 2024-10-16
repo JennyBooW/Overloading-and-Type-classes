@@ -97,19 +97,12 @@ inductive BiTree (α : Type)
   | Leaf : BiTree α
   | Node : α → BiTree α → BiTree α → BiTree α
 
-instance : Functor BiTree where
-  map f t := match t with
-    | BiTree.Leaf => BiTree.Leaf
-    | BiTree.Node x left right =>
-      BiTree.Node (f x) (map f left) (map f right)
+-- Doesn't work huh ?
 
--- Example of usage
-def exampleTree : BiTree Nat :=
-  BiTree.Node 1 (BiTree.Node 2 .Leaf BiTree.Leaf) (BiTree.Node 3 BiTree.Leaf BiTree.Leaf)
+-- List sum
 
--- A function to increment each value in the tree
-def incrementTree (t : BiTree Nat) : BiTree Nat :=
-  Functor.map (λ x => x + 1) t
+def sumListStr : List String → String
+  | []      => ""
+  | x :: xs => x ++ sumListStr xs
 
--- Evaluate incrementTree with exampleTree
-#eval incrementTree exampleTree
+#eval sumListStr ["Hello", " World!", " It works?"]
