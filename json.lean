@@ -55,3 +55,19 @@ def String.separate (sep : String) (strings : List String) : String :=
 
 -- Testing...
 #eval String.separate "-" ["Hello", "World"]
+
+partial def JSON.asString (value : JSON) : String :=
+  match value with
+  | true  => "true"
+  | false => "false"
+  | null  => "null"
+  | string s => "\"" ++ Lean.Json.escape s ++ "\""
+  | number n => dropDecimals n.toString
+  | array elemets =>
+    "[" ++ ", ".separate (elemets.map asString) ++ "]"
+  | object memebers =>
+    let memberToString mem :=
+      "\"" ++ Lean.Json.escape mem.fst ++ "\"" ++ asString mem.snd
+    "{" ++ ", ".separate (memebers.map memberToString) ++ "}"
+
+#eval (buildRepsonse "Functional Programming in Lean" Str "Programming is FUN!").asString
